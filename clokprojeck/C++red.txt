@@ -1,0 +1,7 @@
+C++
+g++ -o monitor_file monitor_file.cpp -lcurl -lpthread
+nohup ./monitor_file &
+crontab -e
+*/5 * * * * /path/to/monitor_file
+*/5 * * * * /home/user/monitor_file >> /home/user/monitor_file.log 2>&1
+chmod +x /path/to/monitor_file
